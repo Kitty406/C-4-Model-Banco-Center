@@ -2,23 +2,17 @@ workspace "Sistema Banco Center" "C4 Model - Sistema de Pagamentos" {
 
     model {
 
-        # ============================================================
         # PESSOAS E SISTEMAS EXTERNOS
-        # ============================================================
 
         usuario = person "Usuário" "Cliente que consulta saldo e realiza pagamentos."
 
         sistemaExterno = softwareSystem "Sistema Externo" "Sistema externo que representa integrações com serviços financeiros, como bancos ou o Banco Central. Responsável por validar, processar e liquidar transações." "External"
 
-        # ============================================================
         # SISTEMA PRINCIPAL
-        # ============================================================
 
         bancoCenterSystem = softwareSystem "Sistema Banco Center" "Sistema de internet banking que permite ao usuário consultar saldo e realizar pagamentos." {
 
-            # ----------------------------------------------------------
             # CONTAINERS (Nível 2)
-            # ----------------------------------------------------------
 
             staticContent = container "Static Content" "Serve os arquivos estáticos da aplicação web e mobile." "App Web / Mobile React Native" "Browser"
 
@@ -26,9 +20,7 @@ workspace "Sistema Banco Center" "C4 Model - Sistema de Pagamentos" {
 
             backend = container "Backend" "Servidor de aplicação responsável pela lógica de negócio e exposição da API REST." "Spring Boot / API REST" {
 
-                # ------------------------------------------------------
                 # COMPONENTS (Nível 3)
-                # ------------------------------------------------------
 
                 autenticacaoService = component "Autenticação Service" "Realiza autenticação e autorização de usuários por meio de tokens JWT assinados. Intercepta requisições HTTP, validando identidade, integridade e permissões. Funciona como camada de segurança que controla o acesso aos serviços de negócio." "Spring Security / JWT"
 
@@ -44,17 +36,13 @@ workspace "Sistema Banco Center" "C4 Model - Sistema de Pagamentos" {
             database = container "Database" "Armazena informações da conta do usuário, logs de acesso e dados transacionais." "PostgreSQL / MySQL" "Database"
         }
 
-        # ============================================================
         # RELACIONAMENTOS - CONTEXTO (Nível 1)
-        # ============================================================
 
         usuario -> bancoCenterSystem "Consulta saldo e realiza pagamentos"
         bancoCenterSystem -> sistemaExterno "Processa pagamento"
         sistemaExterno -> usuario "Valida CPF"
 
-        # ============================================================
         # RELACIONAMENTOS - CONTAINERS (Nível 2)
-        # ============================================================
 
         usuario -> staticContent "Loads the UI from"
         usuario -> ui "View account balance and make payments"
@@ -64,9 +52,7 @@ workspace "Sistema Banco Center" "C4 Model - Sistema de Pagamentos" {
         backend -> sistemaExterno "Processa pagamento"
         sistemaExterno -> bancoCenterSystem "Valida CPF"
 
-        # ============================================================
         # RELACIONAMENTOS - COMPONENTES (Nível 3)
-        # ============================================================
 
         ui -> autenticacaoService "Envia requisições autenticadas"
         autenticacaoService -> transacaoService "Autoriza e repassa requisição"
@@ -76,9 +62,7 @@ workspace "Sistema Banco Center" "C4 Model - Sistema de Pagamentos" {
         saldoService -> database "Lê e escreve dados"
     }
 
-    # ============================================================
     # VIEWS
-    # ============================================================
 
     views {
 
